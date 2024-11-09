@@ -1,0 +1,115 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #121212;
+    color: #fff;
+  }
+  
+  .login-signup-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #121212;
+  }
+  
+  .form-container {
+    position: relative;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 50px 30px;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+    width: 400px;
+    transition: all 0.6s ease-in-out;
+  }
+  
+  .form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .input-field {
+    position: relative;
+    margin-bottom: 30px;
+  }
+  
+  .input-field input {
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    border: 1px solid #333;
+    border-radius: 5px;
+    color: #fff;
+    outline: none;
+    font-size: 16px;
+  }
+  
+  .input-field label {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 16px;
+    transition: 0.3s ease;
+    color: #aaa;
+  }
+  
+  .input-field input:focus ~ label,
+  .input-field input:not(:placeholder-shown) ~ label {
+    top: -15px;
+    font-size: 14px;
+    color: #f57258;
+  }
+  
+  .form-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: #f57258;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .form-btn:hover {
+    background-color: #ff8860;
+  }
+  
+  .toggle-text {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+  }
+  
+  .toggle-text span {
+    color: #f57258;
+    cursor: pointer;
+  }
+  
+  .signup-mode .form-container {
+    height: 500px;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .form-container {
+      width: 90%;
+      padding: 40px 20px;
+    }
+  }
+  
+
+  .form-container.signup-mode {
+    height: auto;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .form-container {
+      width: 90%;
+      padding: 40px 20px;
+    }
+  }

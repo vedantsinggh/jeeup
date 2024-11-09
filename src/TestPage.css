@@ -1,0 +1,22 @@
+.test-page {
+    padding: 20px;
+    background-color: #121212;
+    color: #fff;
+    border-radius: 15px;
+    text-align: center;
+  }
+  
+  .start-test-btn {
+    background-color: #f57258;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  
+  .start-test-btn:hover {
+    background-color: #ff7e6e;
+  }
+  

@@ -1,0 +1,234 @@
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  position: relative;
+}
+
+.rotating-bar {
+  width: 100px;
+  height: 100px;
+  border: 8px solid rgba(255, 255, 255, 0.2);
+  border-top: 8px solid #f57258;
+  border-radius: 50%;
+  animation: spin 1.5s linear infinite;
+  position: absolute;
+}
+
+.loading-gif {
+  width: 500px;
+  height: 500px;
+  z-index: 1;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+.dashboard-page {
+  padding: 20px;
+  color: #f1f1f1;
+  background-color: #121212;
+  font-family: "Poppins", sans-serif;
+}
+
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.dashboard-header h1 {
+  font-size: 2.5rem;
+  color: #f57258;
+}
+
+.dashboard-header p {
+  font-size: 1.2rem;
+  color: #b3b3b3;
+}
+
+/* Batch Tests Path UI */
+.batch-tests {
+  margin-bottom: 40px;
+}
+
+.batch-path {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 20px 0;
+  scroll-snap-type: x mandatory;
+}
+
+.batch-test-node {
+  text-align: center;
+  position: relative;
+  scroll-snap-align: start;
+}
+
+.batch-date {
+  font-size: 0.9rem;
+  color: #9e9e9e;
+  margin-bottom: 5px;
+}
+
+.batch-test {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 15px;
+  border-radius: 15px;
+  width: 180px;
+  transition: transform 0.3s, background 0.3s;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.batch-test:hover {
+  transform: translateY(-10px);
+}
+
+.batch-test.locked {
+  background: rgba(255, 87, 51, 0.15);
+}
+
+.batch-icon {
+  width: 50px;
+  height: 50px;
+  margin-bottom: 10px;
+}
+
+.batch-test h3 {
+  color: #f1f1f1;
+  font-size: 1.1rem;
+}
+
+.batch-test p {
+  margin: 5px 0;
+  color: #b3b3b3;
+}
+
+.batch-test-btn {
+  background-color: #f57258;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.batch-test-btn:hover:not(:disabled) {
+  background-color: #f45a3d;
+}
+
+.batch-test-btn:disabled {
+  background-color: #444;
+  cursor: not-allowed;
+}
+
+.path-connector img {
+  width: 50px;
+  height: 4px;
+}
+
+.test-lists h2 {
+  margin-top: 30px;
+  color: #f57258;
+  font-size: 1.8rem;
+}
+
+/* Full and Chapter Tests */
+.test-card {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 15px;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.test-card.locked {
+  background: rgba(255, 87, 51, 0.15);
+}
+
+.status {
+  font-weight: bold;
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 1rem;
+}
+
+.status.passed {
+  color: #4caf50;
+}
+
+.status.attempted {
+  color: #ffc107;
+}
+
+.status.not-attempted {
+  color: #f44336;
+}
+
+.status.locked {
+  color: #d32f2f;
+}
+
+.test-action-btn {
+  background-color: #f57258;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  margin-top: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.test-action-btn:hover:not(:disabled) {
+  background-color: #f45a3d;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .batch-path {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .test-card, .batch-test {
+    width: 100%;
+    max-width: 320px;
+    margin: 10px auto;
+  }
+
+  .batch-test-btn, .test-action-btn {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+
+  .dashboard-header h1 {
+    font-size: 2rem;
+  }
+
+  .dashboard-header p {
+    font-size: 1rem;
+  }
+}
+
+.no-tests-message {
+  text-align: center;
+  color: #ccc;
+  font-size: 1.2rem;
+  margin-top: 20px;
+}
