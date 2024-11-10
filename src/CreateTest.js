@@ -3,6 +3,8 @@ import { db } from './firebaseConfig';
 import { collection, setDoc, doc, Timestamp } from 'firebase/firestore';
 import { Question } from './Models';
 
+options = ['A', 'B', 'C', 'D']
+
 function generateSampleQuestions(subject, numQuestions) {
   const questions = [];
   for (let i = 1; i <= numQuestions; i++) {
@@ -11,7 +13,7 @@ function generateSampleQuestions(subject, numQuestions) {
         `Sample ${subject} Question ${i}`,
         subject,
         getRandomDifficulty(),
-        `Option ${Math.ceil(Math.random() * 4)}`, // Random correct answer
+        `${options[Math.ceil(Math.random() * 4)]}`, // Random correct answer
         120,
         "https://i.ytimg.com/vi/gibuXt8u9Vc/maxresdefault.jpg" // Default no image
       )
