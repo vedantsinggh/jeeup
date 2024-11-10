@@ -19,6 +19,14 @@ const TestPage = () => {
   const [currentSubject, setCurrentSubject] = useState('physics');
   const [showQuestionGrid, setShowQuestionGrid] = useState(false);
   const [stats, setStats] = useState(null);
+  const [integerAttempts, setIntegerAttempts] = useState({
+    physics: 0,
+    chemistry: 0,
+    math: 0,
+  });
+  
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [timeLeft, setTimeLeft] = useState(null);
   const [startTime, setStartTime] = useState(null);
@@ -140,84 +148,144 @@ const TestPage = () => {
 
     setQuestionStartTime(currentTime);
   };
-
   const handleTestSubmit = async () => {
-    // Show the alert box informing the user about submission
     const confirmSubmit = window.confirm("You are about to submit your test. This action is unchangeable.");
     
     if (!confirmSubmit) {
-      return; // If user cancels submission, return early
+      return;
     }
+
+    // Prevent double submission
+    if (isSubmitting) {
+      return;
+    }
+
+    setIsSubmitting(true);
   
-    // Get the current time spent on the last question
     const finalTimeSpent = Math.round((Date.now() - questionStartTime) / 1000);
-  
-    // Prepare final question data for the current question
     const currentKey = `${currentSubject}_${currentQuestionIndex}`;
+    
     if (selectedAnswers[currentKey]) {
+      const currentQuestion = testData[`${currentSubject}Questions`][currentQuestionIndex];
       const lastQuestionInfo = {
-        ...questionData.find(q => q.subject === currentSubject && q.questionIndex === currentQuestionIndex),
-        timeSpent: finalTimeSpent
+        subject: currentSubject,
+        questionIndex: currentQuestionIndex,
+        prompt: currentQuestion.prompt,
+        selectedAnswer: currentQuestion.isInteger 
+          ? parseInt(selectedAnswers[currentKey], 10)
+          : selectedAnswers[currentKey],
+        timeSpent: finalTimeSpent,
+        difficultyLevel: currentQuestion.difficultyLevel,
+        correctAnswer: currentQuestion.correctAnswer,
+        timeRequired: currentQuestion.timeRequired,
+        isInteger: currentQuestion.isInteger
       };
   
-      // Update question data with final time spent
       setQuestionData(prev => {
-        const existingIndex = prev.findIndex(q => q.subject === currentSubject && q.questionIndex === currentQuestionIndex);
+        const existingIndex = prev.findIndex(q => 
+          q.subject === currentSubject && q.questionIndex === currentQuestionIndex
+        );
   
         if (existingIndex >= 0) {
           const newData = [...prev];
           newData[existingIndex] = lastQuestionInfo;
           return newData;
         }
-        return prev;
+        return [...prev, lastQuestionInfo];
       });
     }
   
-    // Initialize total score
     let totalScore = 0;
   
-    // Calculate score based on correct and incorrect answers
     questionData.forEach((question) => {
       const userAnswer = selectedAnswers[`${question.subject}_${question.questionIndex}`];
+  
       if (userAnswer !== undefined) {
-        if (userAnswer === question.correctAnswer) {
-          totalScore += 4; // Add 4 marks for correct answer
+        if (question.isInteger) {
+          const parsedAnswer = parseInt(userAnswer, 10);
+          if (parsedAnswer === question.correctAnswer) {
+            totalScore += 4;
+          } else {
+            totalScore -= 1;
+          }
         } else {
-          totalScore -= 1; // Deduct 1 mark for incorrect answer
+          if (userAnswer === question.correctAnswer) {
+            totalScore += 4;
+          } else {
+            totalScore -= 1;
+          }
         }
       }
     });
   
-    // Prepare test submission data
     const testSubmissionData = {
       testId,
       userId: auth.currentUser.uid,
       startTime,
       endTime: Date.now(),
       totalTimeSpent: Math.round((Date.now() - startTime) / 1000),
-      totalScore, // Add the calculated score to the submission data
-      questions: questionData
+      totalScore,
+      questions: questionData,
+      integerAttempts
     };
   
     try {
-      // Get the current user and update their "testsAttempted" field (array) with the test submission data
       const currentUser = auth.currentUser;
       if (currentUser) {
         const userDocRef = doc(db, 'users', currentUser.uid);
-  
-        // Add the test submission data to the "testsAttempted" field (array)
         await updateDoc(userDocRef, {
           testsAttempted: arrayUnion(testSubmissionData)
         });
-  
-        console.log('Test successfully added to testsAttempted array for user');
+        
+        setHasUnsavedChanges(false);
+        console.log('Test successfully submitted');
+
+        // Show success message
+        alert('Test submitted successfully!');
+
+        // Add a small delay before refresh to ensure the alert is seen
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       }
     } catch (error) {
       console.error('Error submitting test:', error);
+      alert('Error submitting test. Please try again.');
+      setIsSubmitting(false);
     }
   };
-  
-  // Add useEffect for timer initialization
+
+  // Add useEffect for handling page unload with submission status check
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (isTestStarted && hasUnsavedChanges && !isSubmitting) {
+        e.preventDefault();
+        e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+        return e.returnValue;
+      }
+    };
+
+    const handlePopState = (e) => {
+      if (isTestStarted && hasUnsavedChanges && !isSubmitting) {
+        const confirmLeave = window.confirm(
+          'You are in the middle of a test. If you leave, your progress will be lost. Do you want to submit the test before leaving?'
+        );
+        
+        if (confirmLeave) {
+          e.preventDefault();
+          handleTestSubmit();
+        }
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [isTestStarted, hasUnsavedChanges, isSubmitting]); // Add useEffect for timer initialization
   useEffect(() => {
     if (isTestStarted && !startTime) {
       const totalSeconds = (testData?.totalTestTime || 120) * 60;
@@ -260,6 +328,56 @@ const TestPage = () => {
   const startTestHandler = () => {
     setShowWarningDialog(true);
   };
+
+  const handleIntegerAnswerChange = (subject, questionIndex, value) => {
+    if (!getCurrentQuestion()?.isInteger) return;
+  
+    if (integerAttempts[subject] >= 5) {
+      alert(`You can only attempt 5 integer-type questions in ${subject}.`);
+      return;
+    }
+  
+    const updatedAnswers = { ...selectedAnswers, [`${subject}_${questionIndex}`]: value };
+    setSelectedAnswers(updatedAnswers);
+    
+    // Track the integer answer in questionData
+    const currentTime = Date.now();
+    const timeSpent = Math.round((currentTime - questionStartTime) / 1000);
+    
+    const currentQuestion = testData[`${subject}Questions`][questionIndex];
+    
+    const questionInfo = {
+      subject,
+      questionIndex,
+      prompt: currentQuestion.prompt,
+      selectedAnswer: parseInt(value, 10),
+      timeSpent,
+      difficultyLevel: currentQuestion.difficultyLevel,
+      correctAnswer: currentQuestion.correctAnswer,
+      timeRequired: currentQuestion.timeRequired,
+      isInteger: true
+    };
+
+    setQuestionData(prev => {
+      const existingIndex = prev.findIndex(q => q.subject === subject && q.questionIndex === questionIndex);
+      if (existingIndex >= 0) {
+        const newData = [...prev];
+        newData[existingIndex] = questionInfo;
+        return newData;
+      }
+      return [...prev, questionInfo];
+    });
+
+    if (value && !selectedAnswers[`${subject}_${questionIndex}`]) {
+      setIntegerAttempts((prev) => ({
+        ...prev,
+        [subject]: prev[subject] + 1,
+      }));
+    }
+    
+    setHasUnsavedChanges(true);
+    setQuestionStartTime(currentTime);
+  };  
 
   const confirmStartTest = () => {
     setIsTestStarted(true);
@@ -395,20 +513,35 @@ const TestPage = () => {
           </div>
         )}
         
-        <div className="options-grid">
-          {['A', 'B', 'C', 'D'].map((option) => (
-            <label key={option} className="option-container">
-              <input
-                type="radio"
-                name={`question_${currentSubject}_${currentQuestionIndex}`}
-                value={option}
-                checked={selectedAnswers[`${currentSubject}_${currentQuestionIndex}`] === option}
-                onChange={() => handleAnswerChange(currentSubject, currentQuestionIndex, option)}
-              />
-              <span className="option-text">Option {option}</span>
+        {/* Show either multiple choice options or an integer input field */}
+        {getCurrentQuestion()?.isInteger ? (
+          <div className="integer-input-container">
+            <label htmlFor={`integer-answer-${currentQuestionIndex}`}>
+              Enter your answer:
             </label>
-          ))}
-        </div>
+            <input
+              type="number"
+              id={`integer-answer-${currentQuestionIndex}`}
+              value={selectedAnswers[`${currentSubject}_${currentQuestionIndex}`] || ''}
+              onChange={(e) => handleIntegerAnswerChange(currentSubject, currentQuestionIndex, e.target.value)}
+            />
+          </div>
+        ) : (
+          <div className="options-grid">
+            {['A', 'B', 'C', 'D'].map((option) => (
+              <label key={option} className="option-container">
+                <input
+                  type="radio"
+                  name={`question_${currentSubject}_${currentQuestionIndex}`}
+                  value={option}
+                  checked={selectedAnswers[`${currentSubject}_${currentQuestionIndex}`] === option}
+                  onChange={() => handleAnswerChange(currentSubject, currentQuestionIndex, option)}
+                />
+                <span className="option-text">Option {option}</span>
+              </label>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="navigation-buttons">
@@ -484,6 +617,7 @@ const TestPage = () => {
     )}
   </div>
 )}
+
     </div>
   );
 };

@@ -66,13 +66,14 @@ class Test {
   }
   // Question class to represent individual questions
   class Question {
-    constructor(prompt, subject, difficultyLevel, correctAnswer, timeRequired = 120, image = null) {
+    constructor(prompt, subject, difficultyLevel, correctAnswer, timeRequired = 120, image = null, isInteger) {
       this.prompt = prompt;
       this.subject = subject;
       this.difficultyLevel = difficultyLevel;
       this.correctAnswer = correctAnswer;
       this.timeRequired = timeRequired;
       this.image = image; // Optional image for the question
+      this.isInteger = isInteger;
     }
   }
   
