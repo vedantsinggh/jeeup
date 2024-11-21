@@ -54,15 +54,18 @@ const DashboardPage = () => {
     navigate(`/test/${testId}`);
   };
 
+  const handleNavigate = (path) => {
+    navigate(path);
+  };
+
   if (loading) {
     return (
       <div className="loading-container">
-        {/* <div className="rotating-bar"></div> */}
         <img src="https://media.tenor.com/jfmI0j5FcpAAAAAM/loading-wtf.gif" alt="Loading" className="loading-gif" />
       </div>
     );
   }
-  
+
   const renderTestSection = (tests, title) => (
     <div className="test-section">
       <h2>{title}</h2>
@@ -72,7 +75,6 @@ const DashboardPage = () => {
             <h3>{test.testName}</h3>
             <p><strong>Syllabus:</strong> {test.testSyllabus}</p>
             <p><strong>Total Time:</strong> {test.totalTestTime} mins</p>
-            {/* <p>Status: <span className={`status ${test.status?.toLowerCase()}`}>{test.status}</span></p> */}
             {test.score !== null && <p>Score: {test.score}%</p>}
             <button
               className="test-action-btn"
@@ -97,10 +99,17 @@ const DashboardPage = () => {
 
   return (
     <div className="dashboard-page">
+
       <header className="dashboard-header">
         <h1>JEE Elevate Test Dashboard</h1>
-        <p>Track your progress and prepare for upcoming tests.</p>
+        {/* <p>Track your progress and prepare for upcoming tests.</p> */}
       </header>
+      {/* Navigation Bar */}
+      <nav className="dashboard-nav">
+        <button onClick={() => handleNavigate('/tracker')} className="nav-btn">Tracker</button>
+        <button onClick={() => handleNavigate('/notes')} className="nav-btn">Notes</button>
+        <button onClick={() => handleNavigate('/notices')} className="nav-btn">Notices</button>
+      </nav>
       <section className="test-lists">
         {renderTestSection(batchTests, 'Batch Tests')}
         {renderTestSection(fullTests, 'Full Tests')}

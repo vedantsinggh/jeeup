@@ -1,22 +1,44 @@
 // Models.js
-
-// User class to represent a student user
 class User {
-    constructor(name, email, password, phoneNumber, batch = 'None') {
-      this.name = name;
-      this.email = email;
-      this.password = password;
-      this.phoneNumber = phoneNumber;
-      this.batch = batch;
-      this.testsAttempted = []; // List of test IDs with performance data
-      this.dateCreated =     new Date();
-    }
-  
-    // Add a method to update user performance in a test
-    addTestPerformance(testId, score, timeTaken) {
-      this.testsAttempted.push({ testId, score, timeTaken });
+  constructor(name, email, password, phoneNumber, batch = 'None') {
+    this.name = name;
+    this.email = email;
+    this.password = password;
+    this.phoneNumber = phoneNumber;
+    this.batch = batch;
+    this.testsAttempted = []; // List of test IDs with performance data
+    this.dateCreated = new Date();
+
+    // Tracker data for subjects, units, and chapters
+    this.subjects = {
+      Math: [],
+      Physics: [],
+      Chemistry: [],
+    };
+  }
+
+  // Add a method to update user performance in a test
+  addTestPerformance(testId, score, timeTaken) {
+    this.testsAttempted.push({ testId, score, timeTaken });
+  }
+
+  // Add a method to mark a chapter as done
+  markChapterAsDone(subject, unit, chapter) {
+    const subjectData = this.subjects[subject] || [];
+    const unitData = subjectData.find((u) => u.unit === unit);
+
+    if (unitData) {
+      // Check if chapter is already marked
+      if (!unitData.chaptersDone.includes(chapter)) {
+        unitData.chaptersDone.push(chapter);
+      }
+    } else {
+      // Add new unit if not present
+      this.subjects[subject].push({ unit, chaptersDone: [chapter] });
     }
   }
+}
+
   
 class Test {
     constructor(

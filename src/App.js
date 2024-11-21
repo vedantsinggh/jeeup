@@ -5,6 +5,7 @@ import AboutPage from './AboutPage'; // Make sure to import your AboutPage compo
 import LoginSignupPage from './LoginSignupPage';
 import Dashboard from './DashboardPage';
 import TestPage from './TestPage';
+import TrackerPage from './TrackerPage';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="login" element={<LoginSignupPage />} /> 
           <Route path="dashboard" element={<Dashboard />} /> 
           <Route path="/test/:testId" element={<TestPage />} />
+          <Route path="/tracker" element={<TrackerPage/>} />
         </Routes>
     </Router>
   );
