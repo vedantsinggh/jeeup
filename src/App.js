@@ -6,6 +6,7 @@ import LoginSignupPage from './LoginSignupPage';
 import Dashboard from './DashboardPage';
 import TestPage from './TestPage';
 import TrackerPage from './TrackerPage';
+import NotesPage from './NotesPage';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} /> 
           <Route path="/test/:testId" element={<TestPage />} />
           <Route path="/tracker" element={<TrackerPage/>} />
+          <Route path="/notes" element={<NotesPage/>} />
         </Routes>
     </Router>
   );
