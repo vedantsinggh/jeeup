@@ -1,10 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { db } from './firebaseConfig'; // Adjust this import based on your folder structure
+import { db } from './firebaseConfig';
 import { collection, getDocs } from 'firebase/firestore';
 import './DashboardPage.css';
 import { Test } from './Models';
-import createTestInFirestore from './CreateTest';
+import { 
+  LayoutDashboard, 
+  BookOpen, 
+  Bell, 
+  LineChart, 
+  Clock,
+  Lock,
+  BookCheck,
+  Loader2,
+  GraduationCap
+} from 'lucide-react';
 
 const DashboardPage = () => {
   const [tests, setTests] = useState([]);
@@ -61,27 +71,51 @@ const DashboardPage = () => {
   if (loading) {
     return (
       <div className="loading-container">
-        <img src="https://media.tenor.com/jfmI0j5FcpAAAAAM/loading-wtf.gif" alt="Loading" className="loading-gif" />
+        <Loader2 className="w-16 h-16 text-[#f57258] animate-spin" />
       </div>
     );
   }
 
-  const renderTestSection = (tests, title) => (
+  const renderTestSection = (tests, title, icon) => (
     <div className="test-section">
-      <h2>{title}</h2>
+      <h2 className="flex items-center gap-2">
+        {icon}
+        {title}
+      </h2>
       <div className="test-card-container">
         {tests.map(test => (
           <div className={`test-card ${test.locked ? 'locked' : ''}`} key={test.testId}>
             <h3>{test.testName}</h3>
-            <p><strong>Syllabus:</strong> {test.testSyllabus}</p>
-            <p><strong>Total Time:</strong> {test.totalTestTime} mins</p>
-            {test.score !== null && <p>Score: {test.score}%</p>}
+            <div className="flex items-center gap-2 justify-center">
+            <p><BookCheck size={18} className="text-[#f57258]" />
+              <strong>   Syllabus:</strong> {test.testSyllabus}</p>
+            </div>
+            <div className="flex items-center gap-2 justify-center">
+            <p><Clock size={18} className="text-[#f57258]" />
+              <strong>  Total Time:</strong> {test.totalTestTime} mins</p>
+            </div>
+            {test.score !== null && (
+              <div className="flex items-center gap-2 justify-center">
+                <p><LineChart size={18} className="text-[#f57258]" />
+                  Score: {test.score}%</p>
+              </div>
+            )}
             <button
-              className="test-action-btn"
+              className="test-action-btn flex items-center justify-center gap-2"
               disabled={test.locked}
               onClick={() => handleTestClick(test.testId)}
             >
-              {test.locked ? 'Locked' : 'Open Test'}
+              {test.locked ? (
+                <>
+                  <Lock size={18} />
+                  <span>Locked</span>
+                </>
+              ) : (
+                <>
+                  {/* <BookOpen size={18} /> */}
+                  <span>Open Test</span>
+                </>
+              )}
             </button>
           </div>
         ))}
@@ -99,21 +133,31 @@ const DashboardPage = () => {
 
   return (
     <div className="dashboard-page">
-
       <header className="dashboard-header">
-        <h1>JEE Elevate Test Dashboard</h1>
-        {/* <p>Track your progress and prepare for upcoming tests.</p> */}
+        <h1 className="flex items-center justify-center gap-3">
+          <LayoutDashboard className="w-10 h-10" /> JEE Elevate Test Dashboard
+        </h1>
       </header>
-      {/* Navigation Bar */}
+      
       <nav className="dashboard-nav">
-        <button onClick={() => handleNavigate('/tracker')} className="nav-btn">Tracker</button>
-        <button onClick={() => handleNavigate('/notes')} className="nav-btn">Notes</button>
-        <button onClick={() => handleNavigate('/notices')} className="nav-btn">Notices</button>
+        <button onClick={() => handleNavigate('/tracker')} className="nav-btn flex items-center gap-2">
+          <LineChart size={18} />
+          Tracker
+        </button>
+        <button onClick={() => handleNavigate('/notes')} className="nav-btn flex items-center gap-2">
+          <BookOpen size={18} />
+          Notes
+        </button>
+        <button onClick={() => handleNavigate('/notices')} className="nav-btn flex items-center gap-2">
+          <Bell size={18} />
+          Notices
+        </button>
       </nav>
+
       <section className="test-lists">
-        {renderTestSection(batchTests, 'Batch Tests')}
-        {renderTestSection(fullTests, 'Full Tests')}
-        {renderTestSection(chapterTests, 'Chapter Tests')}
+        {renderTestSection(batchTests, ' Batch Tests', <GraduationCap size={24} className="text-[#f57258]" />)}
+        {renderTestSection(fullTests, ' Full Tests', <BookOpen size={24} className="text-[#f57258]" />)}
+        {renderTestSection(chapterTests, ' Chapter Tests', <BookCheck size={24} className="text-[#f57258]" />)}
       </section>
     </div>
   );
