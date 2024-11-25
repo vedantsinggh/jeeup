@@ -87,6 +87,7 @@ const handleSignupSubmit = (e) => {
       })
       .catch((error) => {
         console.error('Login error:', error);
+        alert('Login Failed.');
       });
   };
 

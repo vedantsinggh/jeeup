@@ -42,9 +42,7 @@ const NotesPage = () => {
         {
           unit: 'Physical Chemistry',
           chapters: [
-            { name: 'States of Matter', notesUrl: 'https://example.com/notes/states-matter' },
-            { name: 'Atomic Structure', notesUrl: 'https://example.com/notes/atomic-structure' },
-            { name: 'Chemical Bonding', notesUrl: 'https://example.com/notes/chemical-bonding' },
+            { name: 'Biomolecule', notesUrl: 'https://xmind.ai/share/UDYdC6zc?xid=mMHyU5Ue' },
           ],
         },
         // Add more units as needed

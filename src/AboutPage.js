@@ -4,13 +4,13 @@ import './AboutPage.css'; // Make sure to include your CSS
 function AboutPage() {
     const team = [
         {
-            name: 'John Doe',
+            name: 'Niza Garg',
             role: 'CEO',
             img: 'https://images.pexels.com/photos/90764/man-studio-portrait-light-90764.jpeg',
             description: 'John is the visionary behind our company, leading us with innovation and passion.',
         },
         {
-            name: 'Jane Smith',
+            name: 'Aishwary Singh',
             role: 'CTO',
             img: 'https://images.pexels.com/photos/90764/man-studio-portrait-light-90764.jpeg',
             description: 'Jane is the tech genius, always pushing boundaries with cutting-edge technologies.',

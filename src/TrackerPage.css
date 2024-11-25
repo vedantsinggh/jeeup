@@ -230,3 +230,61 @@
   }
 }
 
+.tracker-chapter {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.chapter-name {
+  font-weight: 500;
+  color: #f1f1f1;
+  margin-bottom: 10px;
+}
+
+.chapter-progress {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.progress-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 4px 8px;
+  background: rgba(245, 114, 88, 0.1);
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.progress-item:hover {
+  background: rgba(245, 114, 88, 0.2);
+}
+
+.progress-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.progress-item span {
+  font-size: 0.9rem;
+  color: #f1f1f1;
+}
+
+@media (max-width: 768px) {
+  .chapter-progress {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .progress-item {
+    width: 100%;
+  }
+}

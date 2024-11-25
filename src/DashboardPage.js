@@ -141,16 +141,13 @@ const DashboardPage = () => {
       
       <nav className="dashboard-nav">
         <button onClick={() => handleNavigate('/tracker')} className="nav-btn flex items-center gap-2">
-          <LineChart size={18} />
-          Tracker
+          <LineChart size={18} /> Tracker
         </button>
         <button onClick={() => handleNavigate('/notes')} className="nav-btn flex items-center gap-2">
-          <BookOpen size={18} />
-          Notes
+          <BookOpen size={18} /> Notes
         </button>
         <button onClick={() => handleNavigate('/notices')} className="nav-btn flex items-center gap-2">
-          <Bell size={18} />
-          Notices
+          <Bell size={18} /> Notices
         </button>
       </nav>
 
