@@ -35,13 +35,13 @@ const HomePage = () => {
       name: "Rahul Sharma",
       role: "IIT Delhi, 2023",
       content: "The mentorship program completely transformed my JEE preparation journey.",
-      image: "/student1.jpg"
+      image: "https://live.staticflickr.com/4097/4782981316_9cc563b3a5_c.jpg"
     },
     {
       name: "Priya Patel",
       role: "IIT Bombay, 2023",
       content: "The structured approach and 24/7 support made all the difference.",
-      image: "/student2.jpg"
+      image: "https://live.staticflickr.com/4097/4782981316_9cc563b3a5_c.jpg"
     }
   ];
 
@@ -65,8 +65,7 @@ const HomePage = () => {
       
       <div className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
         <Link to="/courses" onClick={() => setIsMenuOpen(false)}>Courses</Link>
-        <Link to="/mentors" onClick={() => setIsMenuOpen(false)}>Mentors</Link>
-        <Link to="/success-stories" onClick={() => setIsMenuOpen(false)}>Success Stories</Link>
+        <Link to="/services" onClick={() => setIsMenuOpen(false)}>Services</Link>
         <Button to="/login" className="nav-cta" onClick={() => setIsMenuOpen(false)}>
           Start Learning
         </Button>
@@ -100,12 +99,9 @@ const HomePage = () => {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="hero-cta-group"
             >
-              <Button className="hero-cta primary">
-                Start Free Trial
+              <Button to="/login" onClick={() => setIsMenuOpen(false)} className="hero-cta primary">
+                Start Journey
                 <span className="btn-hover-effect"></span>
-              </Button>
-              <Button className="hero-cta secondary">
-                Watch Success Stories
               </Button>
             </motion.div>
           </div>
@@ -195,7 +191,7 @@ const HomePage = () => {
         </section>
 
         <section className="cta-section">
-          <div className="cta-content">
+          <div className="cta-content" to="/login" onClick={() => setIsMenuOpen(false)}>
             <h2>Ready to Start Your Journey?</h2>
             <p>Join thousands of successful students who achieved their IIT dreams</p>
             <Button className="cta-button">

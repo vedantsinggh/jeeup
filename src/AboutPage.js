@@ -11,13 +11,13 @@ function AboutPage() {
         },
         {
             name: 'Aishwary Singh',
-            role: 'CTO',
+            role: 'CMO',
             img: 'https://images.pexels.com/photos/90764/man-studio-portrait-light-90764.jpeg',
             description: 'Jane is the tech genius, always pushing boundaries with cutting-edge technologies.',
         },
         {
-            name: 'Mike Johnson',
-            role: 'CFO',
+            name: 'Vedant Singh',
+            role: 'CTO',
             img: 'https://images.pexels.com/photos/90764/man-studio-portrait-light-90764.jpeg',
             description: 'Mike ensures our financial health and long-term success with his strategic thinking.',
         },
