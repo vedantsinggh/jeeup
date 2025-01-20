@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { read, utils } from 'xlsx';
 import { db } from './firebaseConfig';
 import { collection, setDoc, doc, Timestamp } from 'firebase/firestore';
@@ -15,6 +15,22 @@ const TestCreator = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isUploading, setIsUploading] = useState(false);
+
+  useEffect(() => {
+    const correctPassword = 'sexynigga'; // Set your desired password here
+    let userInput = '';
+
+    while (userInput !== correctPassword) {
+      userInput = prompt('Please enter the password to access the site:');
+      if (userInput === null) {
+        alert('Access denied.');
+        window.location.href = 'about:blank'; // Redirect to a blank page
+        return;
+      }
+    }
+
+    alert('Access granted!');
+  }, []);
 
   const handleTestDetailsChange = (e) => {
     const { name, value } = e.target;

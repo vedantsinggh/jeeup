@@ -485,7 +485,7 @@ const TestPage = () => {
 
     <div className="question-display">
       <div className="question-header">
-        <span>Question {currentQuestionIndex + 1}/30</span>
+        <span>Question {currentQuestionIndex + 1}/25</span>
         <span className="subject-indicator">{currentSubject.toUpperCase()}</span>
       </div>
       
@@ -581,7 +581,7 @@ const TestPage = () => {
             <div key={subject} className="subject-grid">
               <h4>{subject.toUpperCase()}</h4>
               <div className="grid">
-                {Array.from({ length: 30 }, (_, i) => (
+                {Array.from({ length: 25 }, (_, i) => (
                   <button
                     key={i}
                     className={`grid-item ${
