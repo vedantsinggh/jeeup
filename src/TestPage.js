@@ -78,17 +78,13 @@ const TestPage = () => {
               const userData = userSnap.data();
               setUserData(userData);
           
-              // Assuming testAttempted is an array of objects or strings
               const testAttempted = userData.testsAttempted || [];
               
-              // Filter all entries where testId matches
               const matchingEntries = testAttempted.filter(entry => entry.testId === testId);
           
-              // If there are matching entries, update state or do something with the results
               if (matchingEntries.length > 0) {
                 setHasAttempted(true);
-                // Optionally, store or process the matching entries
-                setStats(matchingEntries);  // assuming you want to store this in state
+                setStats(matchingEntries);  
               }
             }
           }
@@ -104,7 +100,6 @@ const TestPage = () => {
     fetchTestDetails();
   }, [testId]);
 
-  // Helper function to format time
   const formatTime = (seconds) => {
     const hrs = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
@@ -155,7 +150,6 @@ const TestPage = () => {
       return;
     }
 
-    // Prevent double submission
     if (isSubmitting) {
       return;
     }
@@ -240,10 +234,8 @@ const TestPage = () => {
         setHasUnsavedChanges(false);
         console.log('Test successfully submitted');
 
-        // Show success message
         alert('Test submitted successfully!');
 
-        // Add a small delay before refresh to ensure the alert is seen
         setTimeout(() => {
           window.location.reload();
         }, 1000);
@@ -255,7 +247,6 @@ const TestPage = () => {
     }
   };
 
-  // Add useEffect for handling page unload with submission status check
   useEffect(() => {
     const handleBeforeUnload = (e) => {
       if (isTestStarted && hasUnsavedChanges && !isSubmitting) {
@@ -285,7 +276,7 @@ const TestPage = () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
       window.removeEventListener('popstate', handlePopState);
     };
-  }, [isTestStarted, hasUnsavedChanges, isSubmitting]); // Add useEffect for timer initialization
+  }, [isTestStarted, hasUnsavedChanges, isSubmitting]); 
   useEffect(() => {
     if (isTestStarted && !startTime) {
       const totalSeconds = (testData?.totalTestTime || 120) * 60;
@@ -293,9 +284,8 @@ const TestPage = () => {
       setStartTime(Date.now());
       setQuestionStartTime(Date.now());
     }
-  }, [isTestStarted, testData]); // Ensure this useEffect is called conditionally based on `isTestStarted` and `testData`
+  }, [isTestStarted, testData]);
 
-  // Timer effect
   useEffect(() => {
     let timer;
     if (timeLeft > 0 && isTestStarted) {
@@ -340,7 +330,6 @@ const TestPage = () => {
     const updatedAnswers = { ...selectedAnswers, [`${subject}_${questionIndex}`]: value };
     setSelectedAnswers(updatedAnswers);
     
-    // Track the integer answer in questionData
     const currentTime = Date.now();
     const timeSpent = Math.round((currentTime - questionStartTime) / 1000);
     
@@ -617,7 +606,6 @@ const TestPage = () => {
     )}
   </div>
 )}
-
     </div>
   );
 };
