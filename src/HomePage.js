@@ -1,371 +1,248 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import './HomePage.css';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
-// Enhanced Button component that supports both button and link functionality
-const Button = ({ 
-  children, 
-  className = '', 
-  href, 
-  to,
-  variant = 'primary',
-  ...props 
-}) => {
+const Button = ({ children, className = '', href, to, variant = 'primary', ...props }) => {
   const baseClass = `btn btn-${variant} ${className}`;
   
   if (href) {
-    return (
-      <a 
-        href={href} 
-        className={baseClass}
-        {...props}
-      >
-        {children}
-      </a>
-    );
+    return <a href={href} className={baseClass} {...props}>{children}</a>;
   }
   
   if (to) {
-    return (
-      <Link 
-        to={to} 
-        className={baseClass}
-        {...props}
-      >
-        {children}
-      </Link>
-    );
+    return <Link to={to} className={baseClass} {...props}>{children}</Link>;
   }
-  
-  return (
-    <button 
-      className={baseClass}
-      {...props}
-    >
-      {children}
-    </button>
-  );
+  return <button className={baseClass} {...props}>{children}</button>;
 };
 
-const Card = ({ children, className = '' }) => (
-  <div className={`card ${className}`}>
-    {children}
-  </div>
-);
-
 const HomePage = () => {
-  const contactRef = useRef(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: '',
-  });
-  const [formStatus, setFormStatus] = useState('');
+  const [isVisible, setIsVisible] = useState(false);
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
+  const heroRef = useRef(null);
 
-  const scrollToContact = () => {
-    contactRef.current?.scrollIntoView({ behavior: 'smooth' });
-    setIsMenuOpen(false);
-  };
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting)
+    );
+    if (heroRef.current) observer.observe(heroRef.current);
+    return () => observer.disconnect();
+  }, []);
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    // Add form validation
-    if (!formData.name || !formData.email || !formData.message) {
-      setFormStatus('Please fill in all fields');
-      return;
+  const testimonials = [
+    {
+      name: "Rahul Sharma",
+      role: "IIT Delhi, 2023",
+      content: "The mentorship program completely transformed my JEE preparation journey.",
+      image: "/student1.jpg"
+    },
+    {
+      name: "Priya Patel",
+      role: "IIT Bombay, 2023",
+      content: "The structured approach and 24/7 support made all the difference.",
+      image: "/student2.jpg"
     }
-    // Handle form submission logic here
-    console.log('Form submitted:', formData);
-    setFormStatus('Message sent successfully!');
-    // Reset form
-    setFormData({ name: '', email: '', message: '' });
-  };
-
-  const handleInputChange = (e) => {
-    const { id, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [id]: value
-    }));
-  };
-
-  // Stats and features data remain the same
-  const stats = [
-    { icon: <i className="fas fa-users fa-2x stats-icon" />, value: "100+", label: "Students Enrolled" },
-    { icon: <i className="fas fa-trophy fa-2x stats-icon" />, value: "80%", label: "Success Rate" },
-    { icon: <i className="fas fa-graduation-cap fa-2x stats-icon" />, value: "10+", label: "IITians Created" },
-    { icon: <i className="fas fa-star fa-2x stats-icon" />, value: "4.5/5", label: "Student Rating" },
-  ];
-
-  const features = [
-    { icon: <i className="fas fa-brain" />, title: "Expert Faculty", description: "Learn from IIT alumni and subject matter experts" },
-    { icon: <i className="fas fa-bullseye" />, title: "Focused Approach", description: "Personalized learning paths for maximum results" },
-    { icon: <i className="fas fa-clock" />, title: "24/7 Support", description: "Round-the-clock doubt clearing assistance" },
-    { icon: <i className="fas fa-book-open" />, title: "Complete Material", description: "Comprehensive study material and resources" },
-  ];
-
-  const navigationLinks = [
-    { label: 'About', to: '/about' },
-    { label: 'Contact', onClick: scrollToContact },
   ];
 
   return (
-    <div className="app">
-      {/* Enhanced Header */}
-      <header className="header">
-        <div className="container">
-          <div className="header-content">
-            <div className="header-left">
-              <Link to="/" className="logo" style={{margin: "20px"}}>
-                <img 
-                  src="https://i.ibb.co/vhD6PnY/jeeelevate-removebg-preview.png" 
-                  alt="JEE ELEVATE Logo" 
-                  className="logo-image"
-                />
-                <span className="logo-text">JEE ELEVATE</span>
-              </Link>
-            </div>
-
-            <button 
-              className="menu-toggle"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              aria-label="Toggle menu"
-            >
-              {isMenuOpen ? 
-                <i className="fas fa-times" /> : 
-                <i className="fas fa-bars" />
-              }
-            </button>
-
-            <nav className={`nav ${isMenuOpen ? 'nav-open' : ''}`}>
-              {navigationLinks.map((link, index) => (
-                link.onClick ? (
-                  <button
-                    key={index}
-                    onClick={link.onClick}
-                    className="nav-link"
-                  >
-                    {link.label}
-                  </button>
-                ) : (
-                  <Link
-                    key={index}
-                    to={link.to}
-                    className="nav-link"
-                  >
-                    {link.label}
-                  </Link>
-                )
-              ))}
-              <Button
-                to="/login"
-                variant="primary"
-              >
-                Login
-              </Button>
-            </nav>
-          </div>
+    <div className="modern-app">
+      <header className="modern-header">
+      <nav className="nav-container">
+      <Link to="/" className="logo">
+        <div className="logo-wrapper">
+          <span className="logo-text">JEE ELEVATE</span>
         </div>
+      </Link>
+      
+      <button 
+        className="mobile-menu-btn"
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+        aria-label="Toggle menu"
+      >
+        <span className={`hamburger ${isMenuOpen ? 'active' : ''}`}></span>
+      </button>
+      
+      <div className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
+        <Link to="/courses" onClick={() => setIsMenuOpen(false)}>Courses</Link>
+        <Link to="/mentors" onClick={() => setIsMenuOpen(false)}>Mentors</Link>
+        <Link to="/success-stories" onClick={() => setIsMenuOpen(false)}>Success Stories</Link>
+        <Button to="/login" className="nav-cta" onClick={() => setIsMenuOpen(false)}>
+          Start Learning
+        </Button>
+      </div>
+    </nav>
       </header>
 
-
-      {/* Main content sections remain the same until contact section */}
-      <main className="main pt-16"> 
-        {/* Hero Section */}
-        <section className="hero">
-          <div className="hero-overlay">
-            <img 
-              src="https://www.shutterstock.com/image-photo/portrait-teenage-asian-boy-using-600nw-2155196027.jpg" 
-              alt="Hero background" 
-            />
-          </div>
+      <main>
+        <section ref={heroRef} className="hero-section">
           <div className="hero-content">
-            <h2>
-              Be an <span>IITian</span>
-            </h2>
-            <p>Transform your dreams into reality</p>
-            <a href='/login'>
-            <Button className="hero-btn">
-              Race Up Your Journey
-              <i className="fas fa-arrow-right" />
-            </Button>
-            </a>
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="hero-title"
+            >
+              Transform Your
+              <span className="gradient-text"> JEE Journey</span>
+            </motion.h1>
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="hero-subtitle"
+            >
+              Learn from IITians, Master Advanced Concepts, Achieve Your Dreams
+            </motion.p>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="hero-cta-group"
+            >
+              <Button className="hero-cta primary">
+                Start Free Trial
+                <span className="btn-hover-effect"></span>
+              </Button>
+              <Button className="hero-cta secondary">
+                Watch Success Stories
+              </Button>
+            </motion.div>
+          </div>
+          <div className="hero-visual">
+            <div className="floating-shapes">
+              <div className="shape shape-1"></div>
+              <div className="shape shape-2"></div>
+              <div className="shape shape-3"></div>
+            </div>
           </div>
         </section>
 
-        {/* Stats Section */}
-        <section className="stats">
-          <div className="stats-grid">
-            {stats.map((stat, index) => (
-              <Card key={index} className="stat-card">
-                <div className="stat-content">
-                  {stat.icon}
-                  <h3>{stat.value}</h3>
-                  <p>{stat.label}</p>
-                </div>
-              </Card>
+        <section className="features-section">
+          <div className="section-header">
+            <h2>Why Choose JEE Elevate?</h2>
+            <div className="accent-line"></div>
+          </div>
+          <div className="features-grid">
+            {[
+              {
+                icon: "🎯",
+                title: "Personalized Learning",
+                description: "AI-driven study plans tailored to your strengths and weaknesses"
+              },
+              {
+                icon: "👨‍🏫",
+                title: "Expert Mentorship",
+                description: "1:1 guidance from IIT alumni and top educators"
+              },
+              {
+                icon: "📊",
+                title: "Progress Tracking",
+                description: "Real-time analytics and performance insights"
+              },
+              {
+                icon: "🎮",
+                title: "Interactive Learning",
+                description: "Gamified practice sessions and live doubt solving"
+              }
+            ].map((feature, index) => (
+              <motion.div 
+                key={index}
+                className="feature-card"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <div className="feature-icon">{feature.icon}</div>
+                <h3>{feature.title}</h3>
+                <p>{feature.description}</p>
+                <div className="feature-hover"></div>
+              </motion.div>
             ))}
           </div>
         </section>
 
-        {/* Features Section */}
-        <section className="features">
-          <div className="container">
-            <h2>Why Choose Us</h2>
-            <div className="features-grid">
-              {features.map((feature, index) => (
-                <Card key={index} className="feature-card">
-                  <div className="feature-icon">{feature.icon}</div>
-                  <h3>{feature.title}</h3>
-                  <p>{feature.description}</p>
-                </Card>
+        <section className="testimonials-section">
+          <div className="testimonials-container">
+            <motion.div 
+              className="testimonial-card"
+              key={activeTestimonial}
+              initial={{ opacity: 0, x: 100 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -100 }}
+            >
+              <div className="testimonial-content">
+                <p>"{testimonials[activeTestimonial].content}"</p>
+                <div className="testimonial-author">
+                  <img src={testimonials[activeTestimonial].image} alt={testimonials[activeTestimonial].name} />
+                  <div>
+                    <h4>{testimonials[activeTestimonial].name}</h4>
+                    <p>{testimonials[activeTestimonial].role}</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+            <div className="testimonial-controls">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  className={`control-dot ${index === activeTestimonial ? 'active' : ''}`}
+                  onClick={() => setActiveTestimonial(index)}
+                />
               ))}
             </div>
           </div>
         </section>
 
-        {/* Pricing Section */}
-        <section className="pricing">
-        <div className="container">
-          <h2>Our Pricing Plans</h2>
-          <div className="pricing-grid">
-            {[
-              {
-                tier: "Bronze",
-                image: "https://static.vecteezy.com/system/resources/previews/007/627/725/non_2x/bronze-award-sport-medal-for-winners-with-red-ribbon-vector.jpg",
-                points: ["Mentorship", "Study Material", "₹1099"],
-                enrollLink: "https://forms.gle/4aa3kD7cjgyKqMLN7",
-              },
-              {
-                tier: "Silver",
-                image: "https://static.vecteezy.com/system/resources/previews/007/476/562/non_2x/silver-award-sport-medal-for-winners-with-red-ribbon-vector.jpg",
-                points: ["Doubt Solving", "Study Material", "₹1299"],
-                enrollLink: "https://forms.gle/4aa3kD7cjgyKqMLN7",
-              },
-              {
-                tier: "Gold",
-                image: "https://static.vecteezy.com/system/resources/thumbnails/007/627/739/small_2x/golden-award-sport-medal-for-winners-with-red-ribbon-vector.jpg",
-                points: ["Doubt Solving", "Study Material", "Mentorship", "1-on-1 Mentoring", "₹ 2199"],
-                enrollLink: "https://forms.gle/4aa3kD7cjgyKqMLN7",
-              },
-            ].map(({ tier, image, points, enrollLink }) => (
-              <Card key={tier} className="pricing-card">
-                <div className="pricing-content">
-                  <div className="pricing-image">
-                    <img src={image} alt={`${tier} plan`} />
-                  </div>
-                  <h3>{tier} Plan</h3>
-                  <ul>
-                    {points.map((point, index) => (
-                      <li key={index}>
-                        <i className="fas fa-check-circle" />
-                        <span>{point}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Button as="a" href={enrollLink}>
-                    Enroll Now
-                    <i className="fas fa-arrow-right" />
-                  </Button>
-                </div>
-              </Card>
-            ))}
+        <section className="cta-section">
+          <div className="cta-content">
+            <h2>Ready to Start Your Journey?</h2>
+            <p>Join thousands of successful students who achieved their IIT dreams</p>
+            <Button className="cta-button">
+              Begin Your Success Story
+              <span className="btn-gradient"></span>
+            </Button>
           </div>
-        </div>
-      </section>
-
-
-        <section ref={contactRef} className="contact bg-gray-50 py-16">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12">Contact Us</h2>
-            
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="contact-info space-y-8">
-                <h3 className="text-xl font-semibold mb-6">Get in Touch</h3>
-                {[
-                  { icon: <i className="fas fa-envelope" />, title: "Email", value: "vedantsinggh@gmail.com" },
-                  { icon: <i className="fas fa-phone" />, title: "Phone", value: "+91 7307140847" },
-                  { icon: <i className="fas fa-map-marker-alt" />, title: "Location", value: "Rohini, Delhi" }
-                ].map((contact, index) => (
-                  <div key={index} className="contact-item flex items-start space-x-4">
-                    <div className="contact-icon text-primary text-xl">
-                      {contact.icon}
-                    </div>
-                    <div>
-                      <h4 className="font-semibold">{contact.title}</h4>
-                      <p className="text-gray-600">{contact.value}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <Card className="contact-form p-6 bg-white rounded-lg shadow-md">
-                <form onSubmit={handleFormSubmit} className="space-y-6">
-                  <div className="form-group">
-                    <label htmlFor="name" className="block text-sm font-medium mb-1">
-                      Name
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-primary"
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="email" className="block text-sm font-medium mb-1">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-primary"
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="message" className="block text-sm font-medium mb-1">
-                      Message
-                    </label>
-                    <textarea
-                      id="message"
-                      rows={4}
-                      value={formData.message}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-primary"
-                      required
-                    ></textarea>
-                  </div>
-                  {formStatus && (
-                    <p className={`text-sm ${formStatus.includes('success') ? 'text-green-600' : 'text-red-600'}`}>
-                      {formStatus}
-                    </p>
-                  )}
-                  <Button type="submit" className="w-full">
-                    Send Message
-                    <i className="fas fa-arrow-right ml-2" />
-                  </Button>
-                </form>
-              </Card>
+          <div className="cta-visual">
+            <div className="floating-elements">
+              <div className="element element-1"></div>
+              <div className="element element-2"></div>
+              <div className="element element-3"></div>
             </div>
           </div>
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="footer">
-        <div className="container">
-          <p>&copy; 2024 JEE-ELEVATE. All rights reserved.</p>
-          <div className="footer-links">
-            <a href="/privacy-policy">Privacy Policy</a>
-            <span>|</span>
-            <a href="/terms-of-service">Terms of Service</a>
+      <footer className="modern-footer">
+        <div className="footer-content">
+          <div className="footer-brand">
+            <h3>JEE ELEVATE</h3>
+            <p>Transforming aspirations into achievements</p>
           </div>
+          <div className="footer-links">
+            <div className="link-group">
+              <h4>Quick Links</h4>
+              <Link to="/about">About Us</Link>
+              <Link to="/courses">Courses</Link>
+              <Link to="/success-stories">Success Stories</Link>
+              <Link to="/contact">Contact</Link>
+            </div>
+            <div className="link-group">
+              <h4>Resources</h4>
+              <Link to="/blog">Blog</Link>
+              <Link to="/study-material">Study Material</Link>
+              <Link to="/faqs">FAQs</Link>
+            </div>
+            <div className="link-group">
+              <h4>Connect</h4>
+              <a href="#" target="_blank" rel="noopener noreferrer">Instagram</a>
+              <a href="#" target="_blank" rel="noopener noreferrer">YouTube</a>
+              <a href="#" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            </div>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <p>&copy; 2024 JEE ELEVATE. All rights reserved.</p>
         </div>
       </footer>
     </div>
